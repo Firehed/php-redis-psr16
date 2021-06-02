@@ -219,14 +219,22 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         self::assertFalse($this->cache->has('key'));
     }
 
+    public function testClear(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('flushAll')
+            ->willReturn(true);
+        self::assertTrue($this->cache->clear());
+    }
+
     public function testReconnect(): void
     {
+        self::markTestSkipped('Future functionality');
     }
 
     public function testFallback(): void
     {
-        // $cache = new RedisPsr16();
-        // $cache->setFallbackCache($mock);
+        self::markTestSkipped('Future functionality');
     }
 
     /**
