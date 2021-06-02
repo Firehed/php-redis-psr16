@@ -9,7 +9,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Firehed\\Redis\\": "tests"
+            "Firehed\\Redis\\": [
+                "tests/unit",
+                "tests/integration"
+            ]
         }
     },
     "config": {

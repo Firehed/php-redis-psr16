@@ -73,6 +73,9 @@ jobs:
           --prefer-lowest
 
       - name: PHPUnit
+        env:
+          REDIS_HOST: localhost
+          REDIS_PORT: ${{ job.services.redis.ports[6379] }}
         run: vendor/bin/phpunit
           --coverage-clover coverage.xml
 
