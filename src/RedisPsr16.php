@@ -76,6 +76,8 @@ class RedisPsr16 implements CacheInterface
 
     public function setMultiple($values, $ttl = null): bool
     {
+        $values = is_array($values) ? $values : iterator_to_array($values);
+
         if ($ttl === null) {
             return $this->conn->mset($values);
         } elseif (!is_int($ttl)) {
