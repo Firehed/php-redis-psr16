@@ -1,6 +1,21 @@
 {
     "name": "firehed/redis-psr16",
+    "authors": [
+        {
+            "name": "Eric Stern",
+            "email": "eric@ericstern.com"
+        }
+    ],
     "description": "Redis implementation of PSR-16",
+    "keywords": [
+        "psr-16",
+        "redis",
+        "cache",
+        "mget",
+        "simple-cache",
+        "caching"
+    ],
+    "license": "MIT",
     "type": "library",
     "autoload": {
         "psr-4": {
@@ -18,18 +33,14 @@
     "config": {
         "sort-packages": true
     },
+    "provide": {
+        "psr/simple-cache-implementation": "^1.0.0"
+    },
     "require": {
         "php": "^8.0",
         "ext-redis": "^5.3",
         "psr/simple-cache": "^1.0"
     },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Eric Stern",
-            "email": "eric@ericstern.com"
-        }
-    ],
     "require-dev": {
         "phpstan/phpstan": "^0.12.88",
         "phpstan/phpstan-strict-rules": "^0.12.9",
@@ -47,5 +58,9 @@
         "phpstan": "phpstan analyse",
         "phpstan-baseline": "phpstan analyse --generate-baseline",
         "phpcs": "phpcs"
+    },
+    "support": {
+        "issues": "https://github.com/Firehed/php-redis-psr16/issues",
+        "source": "https://github.com/Firehed/php-redis-psr16/"
     }
 }
