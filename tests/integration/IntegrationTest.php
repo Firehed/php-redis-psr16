@@ -6,6 +6,11 @@ namespace Firehed\Redis;
 
 use Redis;
 
+use function array_keys;
+use function array_map;
+use function assert;
+use function getenv;
+
 /**
  * @covers Firehed\Redis\RedisPsr16
  */
@@ -25,13 +30,13 @@ class IntegrationTest extends \PHPUnit\Framework\TestCase
         $this->host = $host;
         $this->port = $port;
         $redis = new Redis();
-        // $redis->connect($this->host, $this->port);
+        $redis->connect($this->host, $this->port);
         // Clear cache between every test
-        // $redis->flushAll();
+        $redis->flushAll();
         $this->redis = $redis;
     }
 
-    public function testSmoke(): void
+    public function testGetAndSet(): void
     {
         $cache = new RedisPsr16($this->redis);
         self::assertNull($cache->get('foo'), 'Get before set');
@@ -39,13 +44,28 @@ class IntegrationTest extends \PHPUnit\Framework\TestCase
         self::assertSame('bar', $cache->get('foo'), 'Get after set');
     }
 
+    public function testGetAndSetMultiples(): void
+    {
+        $cache = new RedisPsr16($this->redis);
+        $data = [
+            'foo' => 'bar',
+            'foo2' => 'bar2',
+        ];
+        $initial = $cache->getMultiple(array_keys($data));
+        self::assertEqualsCanonicalizing(array_map(fn () => null, $data), $initial);
+
+        $cache->setMultiple($data);
+        $afterSetting = $cache->getMultiple(array_keys($data));
+        self::assertEqualsCanonicalizing($data, $afterSetting);
+    }
+
     public function testReconnect(): void
     {
+        self::markTestSkipped('Future functionality');
     }
 
     public function testFallback(): void
     {
-        // $cache = new RedisPsr16();
-        // $cache->setFallbackCache($mock);
+        self::markTestSkipped('Future functionality');
     }
 }

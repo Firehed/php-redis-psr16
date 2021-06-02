@@ -7,6 +7,9 @@ namespace Firehed\Redis;
 use PHPUnit\Framework\MockObject\MockObject;
 use Redis;
 
+use function array_keys;
+use function array_map;
+
 /**
  * @covers Firehed\Redis\RedisPsr16
  */

@@ -8,9 +8,12 @@ use Psr\SimpleCache\CacheInterface;
 use Redis;
 use RedisException;
 
+use function array_combine;
 use function array_map;
 use function array_values;
+use function count;
 use function is_array;
+use function is_int;
 use function iterator_to_array;
 
 /**
