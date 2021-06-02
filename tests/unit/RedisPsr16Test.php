@@ -97,6 +97,128 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         self::assertFalse($this->cache->get('key', false));
     }
 
+    public function testSet(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('mset')
+            ->with(['key' => 'value'])
+            ->willReturn(true);
+
+        self::assertTrue($this->cache->set('key', 'value'));
+    }
+
+    public function testSetFailure(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('mset')
+            ->with(['key' => 'value'])
+            ->willReturn(false);
+
+        self::assertFalse($this->cache->set('key', 'value'));
+    }
+
+    public function testSetTtl(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('setex')
+            ->with('key', 50, 'value')
+            ->willReturn(true);
+
+        self::assertTrue($this->cache->set('key', 'value', 50));
+    }
+
+    public function testSetTtlFailure(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('setex')
+            ->with('key', 50, 'value')
+            ->willReturn(false);
+
+        self::assertFalse($this->cache->set('key', 'value', 50));
+    }
+
+    public function testSetMultiple(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('mset')
+            ->with([
+                'key' => 'value',
+                'key2' => 'value2',
+            ])
+            ->willReturn(true);
+
+        self::assertTrue($this->cache->setMultiple([
+            'key' => 'value',
+            'key2' => 'value2',
+        ]));
+    }
+
+    public function testSetMultipleFailure(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('mset')
+            ->with([
+                'key' => 'value',
+                'key2' => 'value2',
+            ])
+            ->willReturn(false);
+
+        self::assertFalse($this->cache->setMultiple([
+            'key' => 'value',
+            'key2' => 'value2',
+        ]));
+    }
+
+    public function testSetMultipleTtl(): void
+    {
+        $this->redis->expects(self::exactly(2))
+            ->method('setex')
+            ->withConsecutive(
+                ['key', 50, 'value'],
+                ['key2', 50, 'value2'],
+            )
+            ->willReturn(true);
+
+        self::assertTrue($this->cache->setMultiple([
+            'key' => 'value',
+            'key2' => 'value2',
+        ], 50));
+    }
+
+    public function testSetMultipleTtlFailure(): void
+    {
+        $this->redis->expects(self::exactly(2))
+            ->method('setex')
+            ->withConsecutive(
+                ['key', 50, 'value'],
+                ['key2', 50, 'value2'],
+            )
+            ->willReturnOnConsecutiveCalls(false, true);
+
+        self::assertFalse($this->cache->setMultiple([
+            'key' => 'value',
+            'key2' => 'value2',
+        ], 50));
+    }
+
+    public function testHas(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('exists')
+            ->with('key')
+            ->willReturn(1);
+        self::assertTrue($this->cache->has('key'));
+    }
+
+    public function testHasNot(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('exists')
+            ->with('key')
+            ->willReturn(0);
+        self::assertFalse($this->cache->has('key'));
+    }
+
     public function testReconnect(): void
     {
     }
