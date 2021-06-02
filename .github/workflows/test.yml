@@ -21,7 +21,8 @@ jobs:
           - 'low'
         php:
           - '8.0'
-          - '8.1'
+          # PHPSpec and therefore PHPUnit won't install on 8.1 yet
+          # - '8.1'
 
     steps:
       - name: Check out code
