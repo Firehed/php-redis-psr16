@@ -29,9 +29,8 @@ class RedisPsr16 implements CacheInterface
         try {
             $this->conn->ping();
         } catch (RedisException $e) {
-            // echo $e;
-            throw new Exception('ping failed');
-        } catch (\Throwable $e) {}
+            throw new Exception(Exception::ERROR_PING, $e);
+        }
     }
 
     public function get($key, $default = null): mixed
