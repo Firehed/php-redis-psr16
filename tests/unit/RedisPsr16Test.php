@@ -262,7 +262,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             ->with(['key', 'key2'])
             ->willReturn(2);
 
-        self::assertTrue($this->cache->deleteMutliple(['key', 'key2']));
+        self::assertTrue($this->cache->deleteMultiple(['key', 'key2']));
     }
 
     public function testDeleteMultipleSomeFail(): void
@@ -272,7 +272,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             ->with(['key', 'key2'])
             ->willReturn(1);
 
-        self::assertFalse($this->cache->deleteMutliple(['key', 'key2']));
+        self::assertFalse($this->cache->deleteMultiple(['key', 'key2']));
     }
 
     public function testDeleteMultipleAllFail(): void
@@ -282,7 +282,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             ->with(['key', 'key2'])
             ->willReturn(0);
 
-        self::assertFalse($this->cache->deleteMutliple(['key', 'key2']));
+        self::assertFalse($this->cache->deleteMultiple(['key', 'key2']));
     }
 
     public function testReconnect(): void

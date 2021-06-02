@@ -89,7 +89,10 @@ class RedisPsr16 implements CacheInterface
 
     public function deleteMultiple($keys): bool
     {
-        return false;
+        $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
+        $result = $this->conn->del($keys);
+
+        return $result === count($keys);
     }
 
     public function has($key): bool
