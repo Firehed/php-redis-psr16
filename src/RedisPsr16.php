@@ -74,6 +74,9 @@ class RedisPsr16 implements CacheInterface
         return array_combine($keys, $values);
     }
 
+    /**
+     * @param iterable<string> $values
+     */
     public function setMultiple($values, $ttl = null): bool
     {
         $values = is_array($values) ? $values : iterator_to_array($values);
@@ -92,6 +95,9 @@ class RedisPsr16 implements CacheInterface
         return $ok;
     }
 
+    /**
+     * @param iterable<string> $keys
+     */
     public function deleteMultiple($keys): bool
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
