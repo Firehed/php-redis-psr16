@@ -70,4 +70,5 @@ jobs:
           --coverage-clover coverage.xml
 
       - name: Submit code coverage
+        if: ${{ always() }}
         uses: codecov/codecov-action@v1
