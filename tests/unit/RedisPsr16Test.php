@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Firehed\Redis;
+namespace Firehed\Cache;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Redis;
@@ -11,7 +11,7 @@ use function array_keys;
 use function array_map;
 
 /**
- * @covers Firehed\Redis\RedisPsr16
+ * @covers Firehed\Cache\RedisPsr16
  */
 class RedisPsr16Test extends \PHPUnit\Framework\TestCase
 {

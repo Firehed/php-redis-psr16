@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Firehed\Redis;
+namespace Firehed\Cache;
 
 use Redis;
 
@@ -12,7 +12,7 @@ use function assert;
 use function getenv;
 
 /**
- * @covers Firehed\Redis\RedisPsr16
+ * @covers Firehed\Cache\RedisPsr16
  */
 class IntegrationTest extends \PHPUnit\Framework\TestCase
 {

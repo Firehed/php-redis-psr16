@@ -19,12 +19,12 @@
     "type": "library",
     "autoload": {
         "psr-4": {
-            "Firehed\\Redis\\": "src"
+            "Firehed\\Cache\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Firehed\\Redis\\": [
+            "Firehed\\Cache\\": [
                 "tests/unit",
                 "tests/integration"
             ]
