@@ -84,7 +84,7 @@ class RedisPsr16 implements CacheInterface
         if ($ttl === null) {
             return $this->conn->mset($values);
         } elseif (!is_int($ttl)) {
-            throw new \Exception('DateInterval not supported');
+            throw new TypeException('DateInterval not supported TTL');
         }
         $ok = true;
         foreach ($values as $key => $value) {
