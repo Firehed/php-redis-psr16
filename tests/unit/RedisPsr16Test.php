@@ -34,6 +34,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         $mock->expects(self::once())
             ->method('ping')
             ->willReturn(true);
+
         new RedisPsr16($mock);
     }
 
@@ -51,6 +52,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             'k2' => 'v2',
         ];
         $this->expectMget($data);
+
         self::assertEqualsCanonicalizing($data, $this->cache->getMultiple(array_keys($data)));
     }
 
@@ -69,6 +71,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         $misses = array_map(fn () => null, $data);
         $this->expectMget($data);
         $results = $this->cache->getMultiple(array_keys($data));
+
         self::assertEqualsCanonicalizing($misses, $results);
     }
 
@@ -82,6 +85,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         $expected['key2'] = 3;
         $this->expectMget($data);
         $results = $this->cache->getMultiple(array_keys($data), 3);
+
         self::assertEqualsCanonicalizing($expected, $results);
     }
 
@@ -94,6 +98,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
     public function testGetReturnsDefaultOnMissFalseHotpath(): void
     {
         $this->expectMget(['key' => false]);
+
         self::assertFalse($this->cache->get('key', false));
     }
 
@@ -207,6 +212,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             ->method('exists')
             ->with('key')
             ->willReturn(1);
+
         self::assertTrue($this->cache->has('key'));
     }
 
@@ -216,6 +222,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             ->method('exists')
             ->with('key')
             ->willReturn(0);
+
         self::assertFalse($this->cache->has('key'));
     }
 
@@ -224,7 +231,58 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         $this->redis->expects(self::once())
             ->method('flushAll')
             ->willReturn(true);
+
         self::assertTrue($this->cache->clear());
+    }
+
+    public function testDelete(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('del')
+            ->with(['key'])
+            ->willReturn(1);
+
+        self::assertTrue($this->cache->delete('key'));
+    }
+
+    public function testDeleteFailure(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('del')
+            ->with(['key'])
+            ->willReturn(0);
+
+        self::assertFalse($this->cache->delete('key'));
+    }
+
+    public function testDeleteMultiple(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('del')
+            ->with(['key', 'key2'])
+            ->willReturn(2);
+
+        self::assertTrue($this->cache->deleteMutliple(['key', 'key2']));
+    }
+
+    public function testDeleteMultipleSomeFail(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('del')
+            ->with(['key', 'key2'])
+            ->willReturn(1);
+
+        self::assertFalse($this->cache->deleteMutliple(['key', 'key2']));
+    }
+
+    public function testDeleteMultipleAllFail(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('del')
+            ->with(['key', 'key2'])
+            ->willReturn(0);
+
+        self::assertFalse($this->cache->deleteMutliple(['key', 'key2']));
     }
 
     public function testReconnect(): void
