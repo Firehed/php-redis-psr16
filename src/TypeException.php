@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Firehed\Redis;
+namespace Firehed\Cache;
 
 use LogicException;
 use Psr\SimpleCache\InvalidArgumentException;

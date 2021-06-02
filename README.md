@@ -15,6 +15,6 @@ $redis = new \Redis();
 $redis->connect('yourhost', 6379);
 $redis->auth(['user' => 'youruser', 'pass' => 'yourpass']);
 
-$cache = new \Firehed\Redis\RedisPsr16($redis);
+$cache = new \Firehed\Cache\RedisPsr16($redis);
 // Use like any other PSR-16 implementation
 ```

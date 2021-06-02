@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Firehed\Redis;
+namespace Firehed\Cache;
 
 use Psr\SimpleCache\CacheInterface;
 use Redis;
