@@ -37,5 +37,10 @@ jobs:
           --no-suggest
           --prefer-dist
 
+      - name: Validate composer.json
+        if: ${{ always() }}
+        run: composer validate
+
       - name: PHPCS
+        if: ${{ always() }}
         run: composer phpcs
