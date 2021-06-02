@@ -9,10 +9,12 @@ use Redis;
 /**
  * @covers Firehed\Redis\RedisPsr16
  */
-class RedisPsr16Test extends \PHPUnit\Framework\TestCase
+class IntegrationTest extends \PHPUnit\Framework\TestCase
 {
     private string $host;
     private int $port;
+
+    private Redis $redis;
 
     public function setUp(): void
     {
@@ -23,14 +25,15 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         $this->host = $host;
         $this->port = $port;
         $redis = new Redis();
-        $redis->connect($this->host, $this->port);
+        // $redis->connect($this->host, $this->port);
         // Clear cache between every test
-        $redis->flushAll();
+        // $redis->flushAll();
+        $this->redis = $redis;
     }
 
     public function testSmoke(): void
     {
-        $cache = new RedisPsr16($this->host, $this->port);
+        $cache = new RedisPsr16($this->redis);
         self::assertNull($cache->get('foo'), 'Get before set');
         self::assertTrue($cache->set('foo', 'bar'), 'Set');
         self::assertSame('bar', $cache->get('foo'), 'Get after set');

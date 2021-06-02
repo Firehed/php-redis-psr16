@@ -11,9 +11,13 @@ use Redis;
  */
 class RedisPsr16Test extends \PHPUnit\Framework\TestCase
 {
-    public function testSmoke(): void
+    public function testConstructPingsServer(): void
     {
-        // $cache = new RedisPsr16($this->host, $this->port);
+        $mock = $this->createMock(Redis::class);
+        $mock->expects(self::once())
+            ->method('ping')
+            ->willReturn(true);
+        $cache = new RedisPsr16($mock);
         // self::assertNull($cache->get('foo'), 'Get before set');
         // self::assertTrue($cache->set('foo', 'bar'), 'Set');
         // self::assertSame('bar', $cache->get('foo'), 'Get after set');

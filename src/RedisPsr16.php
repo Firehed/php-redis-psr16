@@ -6,6 +6,7 @@ namespace Firehed\Redis;
 
 use Psr\SimpleCache\CacheInterface;
 use Redis;
+use RedisException;
 
 use function array_map;
 use function array_values;
@@ -23,12 +24,14 @@ class RedisPsr16 implements CacheInterface
     // Default value on cache miss. This is inherent to the actual Redis driver
     private const MISS_DEFAULT = false;
 
-    private Redis $conn;
-
-    public function __construct(string $host, int $port = 6379)
+    public function __construct(private Redis $conn)
     {
-        $this->conn = new Redis();
-        $this->conn->connect($host, $port);
+        try {
+            $this->conn->ping();
+        } catch (RedisException $e) {
+            // echo $e;
+            throw new Exception('ping failed');
+        } catch (\Throwable $e) {}
     }
 
     public function get($key, $default = null): mixed
