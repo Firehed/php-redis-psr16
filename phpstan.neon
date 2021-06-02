@@ -1,0 +1,11 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+parameters:
+    excludes_analyse:
+        - vendor
+    ignoreErrors:
+        # This is unfixable without an upstream change to the interface.
+        - '#Multiple\(\) should be contravariant with parameter#'
+    level: max
+    paths:
+        - .
