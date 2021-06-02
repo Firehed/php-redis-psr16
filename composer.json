@@ -1,0 +1,48 @@
+{
+    "name": "firehed/redis-psr16",
+    "description": "Redis implementation of PSR-16",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Firehed\\Redis\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Firehed\\Redis\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require": {
+        "php": "^8.0",
+        "ext-redis": "^5.3",
+        "psr/simple-cache": "^1.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Eric Stern",
+            "email": "eric@ericstern.com"
+        }
+    ],
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.88",
+        "phpstan/phpstan-strict-rules": "^0.12.9",
+        "phpunit/phpunit": "^9.5",
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    "scripts": {
+        "test": [
+            "@phpunit",
+            "@phpstan",
+            "@phpcs"
+        ],
+        "autofix": "phpcbf",
+        "phpunit": "phpunit",
+        "phpstan": "phpstan analyse",
+        "phpstan-baseline": "phpstan analyse --generate-baseline",
+        "phpcs": "phpcs"
+    }
+}
