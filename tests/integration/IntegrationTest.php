@@ -85,6 +85,12 @@ class IntegrationTest extends \PHPUnit\Framework\TestCase
      * > If it is not possible to return the exact saved value for any reason,
      * > implementing libraries MUST respond with a cache miss rather than
      * > corrupted data.
+     *
+     * Note that this behavior isn't _strictly_ true: it's possible to check
+     * `->has($key)` on the "miss" and infer the value must be false, but this
+     * would require additional roundtrips on all misses, increasing execution
+     * time. Given that the utility of caching literal `false` is quite low,
+     * the overhead does not seem worth it.
      */
     public function testFalseHandling(): void
     {
