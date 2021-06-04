@@ -158,6 +158,9 @@ class RedisPsr16 implements CacheInterface
      */
     private function handleException(RedisException $e): bool
     {
-        return false;
+        return match ($this->mode) {
+            self::MODE_THROW => throw new Exception(Exception::ERROR_GONE, $e),
+            self::MODE_FAIL => false,
+        };
     }
 }
