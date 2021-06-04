@@ -37,6 +37,9 @@ class RedisPsr16 implements CacheInterface
     {
         try {
             $this->conn->ping();
+            if ($this->conn->getOption(Redis::OPT_SERIALIZER) === Redis::SERIALIZER_NONE) {
+                $this->conn->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
+            }
         } catch (RedisException $e) {
             // Abusing match slightly here, so if a new mode is added in the
             // future, static analysis will find it.
