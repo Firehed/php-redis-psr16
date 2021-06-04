@@ -69,7 +69,7 @@ class RedisPsr16 implements CacheInterface
     public function clear(): bool
     {
         try {
-            return $this->conn->flushAll();
+            return $this->conn->flushDB();
         } catch (RedisException $e) {
             return $this->handleException($e);
         }

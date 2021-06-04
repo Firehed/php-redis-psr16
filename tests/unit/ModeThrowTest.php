@@ -33,7 +33,7 @@ class ModeThrowTest extends \PHPUnit\Framework\TestCase
             'mset',
             'exists',
             'flushAll',
-            'flushDb',
+            'flushDB',
         ];
         foreach ($methods as $method) {
             $this->redis->method($method)
