@@ -233,7 +233,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
     {
         // This must clear only the current database.
         $this->redis->expects(self::once())
-            ->method('flushDb')
+            ->method('flushDB')
             ->willReturn(true);
         $this->redis->expects(self::never())
             ->method('flushAll');
