@@ -9,6 +9,7 @@ use Redis;
 use RedisException;
 
 use function array_combine;
+use function array_fill_keys;
 use function array_map;
 use function array_values;
 use function count;
@@ -16,12 +17,6 @@ use function is_array;
 use function is_int;
 use function iterator_to_array;
 
-/**
- * TODO:
- * - regularly try to reconnect
- * - auth?
- * - connection config
- */
 class RedisPsr16 implements CacheInterface
 {
     // Default value on cache miss. This is inherent to the actual Redis driver
