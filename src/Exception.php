@@ -24,7 +24,7 @@ class Exception extends RuntimeException implements CacheException
     {
         $message = match ($error) {
             self::ERROR_PING => 'Cannot ping server. Did you connect() and/or auth() first?',
-            self::ERROR_GONE => '',
+            self::ERROR_GONE => 'Redis server went away.',
         };
 
         parent::__construct($message, $error, previous: $prev);
