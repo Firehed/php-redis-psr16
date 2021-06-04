@@ -20,11 +20,6 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
 
     private RedisPsr16 $cache;
 
-    /**
-     * @var array<string, mixed> Simulated cache entries
-     */
-    private array $entries = [];
-
     public function setUp(): void
     {
         $this->redis = $this->createMock(Redis::class);
