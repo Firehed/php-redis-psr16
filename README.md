@@ -21,7 +21,13 @@ $cache = new \Firehed\Cache\RedisPsr16($redis);
 
 ### Configuration
 
-A runtime mode can be set via the `$mode` constructor parameter.
+A runtime mode can be set via the `$mode` constructor parameter:
+
+```php
+use Firehed\Cache\RedisPsr16;
+
+$cache = new RedisPsr16($redis, RedisPsr16::MODE_THROW);
+```
 
 - `RedisPsr16::MODE_THROW` may throw exceptions on network issues (in the same way directly using the `Redis` extension can).
   Exceptions thrown will implement `Psr\SimpleCache\CacheException`, per PSR-16 requirements.
