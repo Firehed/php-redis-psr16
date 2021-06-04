@@ -27,12 +27,23 @@ class RedisPsr16 implements CacheInterface
     // Default value on cache miss. This is inherent to the actual Redis driver
     private const MISS_DEFAULT = false;
 
-    public function __construct(private Redis $conn)
+    public const MODE_THROW = 0;
+    public const MODE_FAIL = 1;
+
+    /**
+     * @param self::MODE_* $mode Error handling mode
+     */
+    public function __construct(private Redis $conn, private int $mode = self::MODE_THROW)
     {
         try {
             $this->conn->ping();
         } catch (RedisException $e) {
-            throw new Exception(Exception::ERROR_PING, $e);
+            // Abusing match slightly here, so if a new mode is added in the
+            // future, static analysis will find it.
+            match ($this->mode) {
+                self::MODE_THROW => throw new Exception(Exception::ERROR_PING, $e),
+                self::MODE_FAIL => null,
+            };
         }
     }
 
@@ -48,12 +59,20 @@ class RedisPsr16 implements CacheInterface
 
     public function delete($key): bool
     {
-        return $this->deleteMultiple([$key]);
+        try {
+            return $this->deleteMultiple([$key]);
+        } catch (RedisException $e) {
+            return $this->handleException($e);
+        }
     }
 
     public function clear(): bool
     {
-        return $this->conn->flushAll();
+        try {
+            return $this->conn->flushAll();
+        } catch (RedisException $e) {
+            return $this->handleException($e);
+        }
     }
 
     /**
@@ -63,7 +82,14 @@ class RedisPsr16 implements CacheInterface
     public function getMultiple($keys, $default = null)
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
-        $raw = $this->conn->mget($keys);
+        try {
+            $raw = $this->conn->mget($keys);
+        } catch (RedisException $e) {
+            return match ($this->mode) {
+                self::MODE_THROW => throw new Exception(Exception::ERROR_GONE, $e),
+                self::MODE_FAIL => array_fill_keys($keys, $default),
+            };
+        }
         $values = ($default === self::MISS_DEFAULT)
             ? $raw
             : array_map(
@@ -82,14 +108,22 @@ class RedisPsr16 implements CacheInterface
         $values = is_array($values) ? $values : iterator_to_array($values);
 
         if ($ttl === null) {
-            return $this->conn->mset($values);
+            try {
+                return $this->conn->mset($values);
+            } catch (RedisException $e) {
+                return $this->handleException($e);
+            }
         } elseif (!is_int($ttl)) {
             throw new TypeException('DateInterval not supported TTL');
         }
         $ok = true;
         foreach ($values as $key => $value) {
-            if (!$this->conn->setex($key, $ttl, $value)) {
-                $ok = false;
+            try {
+                if (!$this->conn->setex($key, $ttl, $value)) {
+                    $ok = false;
+                }
+            } catch (RedisException $e) {
+                $ok = $this->handleException($e);
             }
         }
         return $ok;
@@ -101,13 +135,29 @@ class RedisPsr16 implements CacheInterface
     public function deleteMultiple($keys): bool
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
-        $result = $this->conn->del($keys);
+        try {
+            $result = $this->conn->del($keys);
+        } catch (RedisException $e) {
+            return $this->handleException($e);
+        }
 
         return $result === count($keys);
     }
 
     public function has($key): bool
     {
-        return $this->conn->exists($key) > 0;
+        try {
+            return $this->conn->exists($key) > 0;
+        } catch (RedisException $e) {
+            return $this->handleException($e);
+        }
+    }
+
+    /**
+     * @return false
+     */
+    private function handleException(RedisException $e): bool
+    {
+        return false;
     }
 }
