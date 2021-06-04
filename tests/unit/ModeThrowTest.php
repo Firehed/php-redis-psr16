@@ -88,6 +88,13 @@ class ModeThrowTest extends \PHPUnit\Framework\TestCase
         $this->cache->setMultiple(['key1' => 'value1', 'key2' => 'value2']);
     }
 
+    public function testSetMultipleTtlThrows(): void
+    {
+        self::expectException(CacheException::class);
+        $this->cache->setMultiple(['key1' => 'value1', 'key2' => 'value2'], 30);
+    }
+
+
     public function testDeleteMultipleThrows(): void
     {
         self::expectException(CacheException::class);

@@ -104,6 +104,11 @@ class ModeFailTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($this->cache->setMultiple(['key1' => 'value1', 'key2' => 'value2']));
     }
 
+    public function testSetMultipleTtlFails(): void
+    {
+        self::assertFalse($this->cache->setMultiple(['key1' => 'value1', 'key2' => 'value2'], 30));
+    }
+
     public function testDeleteMultipleFails(): void
     {
         self::assertFalse($this->cache->deleteMultiple(['key1', 'key2']));
