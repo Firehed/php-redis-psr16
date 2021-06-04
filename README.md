@@ -19,6 +19,10 @@ $cache = new \Firehed\Cache\RedisPsr16($redis);
 // Use like any other PSR-16 implementation
 ```
 
+If `Redis::OPT_SERIALIZER` is not set (or uses the default `Redis::SERIALIZER_NONE`), this library will automatically set it to `Redis::SERIALIZER_PHP`.
+This will ensure that non-string values are stored and retreived correctly.
+Be aware that this means if any `object`s are cached, any magic methods related to serialization (`__sleep()`, `__wakeup()`, `__serialize()`, `__unserialize()`) will be called during caching operations.
+
 ### Configuration
 
 A runtime mode can be set via the `$mode` constructor parameter:
