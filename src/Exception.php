@@ -8,6 +8,10 @@ use RedisException;
 use RuntimeException;
 use Psr\SimpleCache\CacheException;
 
+/**
+ * @internal - client code should only look for PSR exceptions, not these
+ * specific implementations.
+ */
 class Exception extends RuntimeException implements CacheException
 {
     public const ERROR_PING = 1;
