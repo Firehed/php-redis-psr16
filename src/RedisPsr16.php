@@ -11,6 +11,7 @@ use RedisException;
 use function array_combine;
 use function array_fill_keys;
 use function array_map;
+use function array_unique;
 use function array_values;
 use function count;
 use function is_array;
@@ -80,6 +81,7 @@ class RedisPsr16 implements CacheInterface
     public function getMultiple($keys, $default = null)
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
+        $keys = array_unique($keys);
         try {
             $raw = $this->conn->mGet($keys);
         } catch (RedisException $e) {
