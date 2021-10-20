@@ -81,7 +81,7 @@ class RedisPsr16 implements CacheInterface
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
         try {
-            $raw = $this->conn->mget($keys);
+            $raw = $this->conn->mGet($keys);
         } catch (RedisException $e) {
             return match ($this->mode) {
                 self::MODE_THROW => throw new Exception(Exception::ERROR_GONE, $e),
@@ -117,7 +117,7 @@ class RedisPsr16 implements CacheInterface
         $ok = true;
         foreach ($values as $key => $value) {
             try {
-                if (!$this->conn->setex($key, $ttl, $value)) {
+                if (!$this->conn->setEx($key, $ttl, $value)) {
                     $ok = false;
                 }
             } catch (RedisException $e) {
