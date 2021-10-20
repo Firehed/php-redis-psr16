@@ -89,6 +89,18 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         self::assertEqualsCanonicalizing($expected, $results);
     }
 
+    public function testGetMultipleUniquesValues(): void
+    {
+        $data = [
+            'key' => 'hit',
+            'key2' => false,
+        ];
+        $this->expectMget($data);
+        $results = $this->cache->getMultiple(['key', 'key2', 'key', 'key2']);
+
+        self::assertEqualsCanonicalizing($data, $results);
+    }
+
     public function testGetReturnsDefaultOnMiss(): void
     {
         $this->expectMget(['key' => false]);
