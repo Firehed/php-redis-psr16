@@ -326,6 +326,27 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         self::assertNull($this->cache->get('key'));
     }
 
+    public function testEmptyGetMultiple(): void
+    {
+        $this->redis->expects(self::never())
+            ->method('mget');
+        $this->cache->getMultiple([]);
+    }
+
+    public function testEmptyDeleteMultiple(): void
+    {
+        $this->redis->expects(self::never())
+            ->method('del');
+        $this->cache->deleteMultiple([]);
+    }
+
+    public function testEmptySetMultiple(): void
+    {
+        $this->redis->expects(self::never())
+            ->method('mset');
+        $this->cache->setMultiple([]);
+    }
+
     public function testReconnect(): void
     {
         self::markTestSkipped('Future functionality');
