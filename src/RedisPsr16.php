@@ -74,7 +74,7 @@ class RedisPsr16 implements CacheInterface
      * @param iterable<string> $keys
      * @return array<string, mixed>
      */
-    public function getMultiple($keys, $default = null)
+    public function getMultiple($keys, $default = null): array
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
         $keys = array_unique($keys);
