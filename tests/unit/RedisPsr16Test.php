@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Firehed\Cache;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Psr\SimpleCache\CacheException;
 use Redis;
+use RedisException;
 
 use function array_keys;
 use function array_map;
@@ -284,6 +286,22 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             ->willReturn(0);
 
         self::assertFalse($this->cache->deleteMultiple(['key', 'key2']));
+    }
+
+    public function testSetMode(): void
+    {
+        $this->redis->expects(self::exactly(2))
+            ->method('mget')
+            ->willThrowException(new RedisException());
+        try {
+            $this->cache->get('key');
+            self::fail('First attempt should have thrown');
+        } catch (CacheException) {
+            // no-op
+        }
+
+        $this->cache->setMode(RedisPsr16::MODE_FAIL);
+        self::assertNull($this->cache->get('key'));
     }
 
     public function testReconnect(): void

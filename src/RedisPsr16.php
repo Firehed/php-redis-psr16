@@ -152,6 +152,14 @@ class RedisPsr16 implements CacheInterface
     }
 
     /**
+     * @param self::MODE_* $mode Error handling mode
+     */
+    public function setMode(int $mode): void
+    {
+        $this->mode = $mode;
+    }
+
+    /**
      * @return false
      */
     private function handleException(RedisException $e): bool
