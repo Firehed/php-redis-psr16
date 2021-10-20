@@ -78,6 +78,9 @@ class RedisPsr16 implements CacheInterface
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
         $keys = array_unique($keys);
+        if ($keys === []) {
+            return [];
+        }
         try {
             $raw = $this->conn->mGet($keys);
         } catch (RedisException $e) {
@@ -102,6 +105,9 @@ class RedisPsr16 implements CacheInterface
     public function setMultiple($values, $ttl = null): bool
     {
         $values = is_array($values) ? $values : iterator_to_array($values);
+        if ($values === []) {
+            return true;
+        }
 
         if ($ttl === null) {
             try {
@@ -132,6 +138,9 @@ class RedisPsr16 implements CacheInterface
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
         $keys = array_unique($keys);
+        if ($keys === []) {
+            return true;
+        }
         try {
             $result = $this->conn->del($keys);
         } catch (RedisException $e) {
