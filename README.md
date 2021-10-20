@@ -58,3 +58,5 @@ $cache = new RedisPsr16($redis, RedisPsr16::MODE_THROW);
 - `RedisPsr16::MODE_FAIL` will prevent exceptions from being thrown.
   Any error, including networking errors (where the `Redis` extension throws) will be treated as a failure.
   This could result in misleading behavior around cache misses; if it's important for your application to know the difference between "miss" and "Redis unavailable", do not use this mode.
+
+The mode can be adjusted at runtime with `RedisPsr16::setMode($mode)`.
