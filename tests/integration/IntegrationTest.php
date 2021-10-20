@@ -74,6 +74,24 @@ class IntegrationTest extends \PHPUnit\Framework\TestCase
         self::assertEqualsCanonicalizing(['foo' => 'bar', 'foo2' => 'bar2'], $afterSetting);
     }
 
+    public function testDelete(): void
+    {
+        $cache = new RedisPsr16($this->redis);
+        $data = [
+            'foo' => 'bar',
+            'foo2' => 'bar2',
+        ];
+        $cache->setMultiple($data);
+
+        $beforeDelete = $cache->getMultiple(['foo', 'foo2']);
+        self::assertEqualsCanonicalizing($data, $beforeDelete);
+
+        $result = $cache->deleteMultiple(['foo', 'foo2', 'foo']);
+        self::assertTrue($result);
+        $afterDelete = $cache->getMultiple(['foo', 'foo2']);
+        self::assertEqualsCanonicalizing(['foo' => null, 'foo2' => null], $afterDelete);
+    }
+
     public function testObjectSerialization(): void
     {
         $object = new SampleObject(3, 'three', 3.14, true);

@@ -280,6 +280,16 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
         self::assertTrue($this->cache->deleteMultiple(['key', 'key2']));
     }
 
+    public function testDeleteMultipleUniquesValues(): void
+    {
+        $this->redis->expects(self::once())
+            ->method('del')
+            ->with(['key', 'key2'])
+            ->willReturn(2);
+
+        self::assertTrue($this->cache->deleteMultiple(['key', 'key2', 'key', 'key2']));
+    }
+
     public function testDeleteMultipleSomeFail(): void
     {
         $this->redis->expects(self::once())
