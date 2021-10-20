@@ -58,11 +58,7 @@ class RedisPsr16 implements CacheInterface
 
     public function delete($key): bool
     {
-        try {
-            return $this->deleteMultiple([$key]);
-        } catch (RedisException $e) {
-            return $this->handleException($e);
-        }
+        return $this->deleteMultiple([$key]);
     }
 
     public function clear(): bool
@@ -135,6 +131,7 @@ class RedisPsr16 implements CacheInterface
     public function deleteMultiple($keys): bool
     {
         $keys = is_array($keys) ? array_values($keys) : iterator_to_array($keys);
+        $keys = array_unique($keys);
         try {
             $result = $this->conn->del($keys);
         } catch (RedisException $e) {
