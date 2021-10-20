@@ -322,7 +322,7 @@ class RedisPsr16Test extends \PHPUnit\Framework\TestCase
             // no-op
         }
 
-        $this->cache->setMode(RedisPsr16::MODE_FAIL);
+        $this->cache->setMode(ErrorMode::FAIL);
         self::assertNull($this->cache->get('key'));
     }
 
