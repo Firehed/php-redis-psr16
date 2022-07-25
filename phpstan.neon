@@ -3,11 +3,6 @@ includes:
 parameters:
     excludePaths:
         - vendor
-    ignoreErrors:
-        # This is unfixable without an upstream change to the interface.
-        - '#Multiple\(\) should be contravariant with parameter#'
-        # Same
-        - '#^Parameter \#1 \$exception of method PHPUnit\\Framework\\TestCase::expectException\(\) expects class-string<Throwable>, string given.$#'
     level: max
     paths:
         - .
