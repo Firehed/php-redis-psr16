@@ -100,7 +100,7 @@ class RedisPsr16 implements CacheInterface
     }
 
     /**
-     * @param iterable<string> $values
+     * @param iterable<mixed> $values
      */
     public function setMultiple($values, $ttl = null): bool
     {
