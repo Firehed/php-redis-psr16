@@ -42,7 +42,7 @@ class ModeFailTest extends \PHPUnit\Framework\TestCase
             $this->redis->method($method)
                 ->willThrowException($ex);
         }
-        $this->cache = new RedisPsr16($this->redis, RedisPsr16::MODE_FAIL);
+        $this->cache = new RedisPsr16($this->redis, ErrorMode::FAIL);
     }
 
     public function testConstructDoesNotThrow(): void
@@ -51,7 +51,7 @@ class ModeFailTest extends \PHPUnit\Framework\TestCase
         $redis = $this->createMock(Redis::Class);
         $redis->method('ping')
             ->willThrowException(new RedisException());
-        $cache = new RedisPsr16($redis, RedisPsr16::MODE_FAIL);
+        $cache = new RedisPsr16($redis, ErrorMode::FAIL);
         self::assertInstanceOf(CacheInterface::class, $cache);
     }
 

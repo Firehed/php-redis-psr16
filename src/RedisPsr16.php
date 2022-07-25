@@ -23,13 +23,10 @@ class RedisPsr16 implements CacheInterface
     // Default value on cache miss. This is inherent to the actual Redis driver
     private const MISS_DEFAULT = false;
 
-    public const MODE_THROW = 0;
-    public const MODE_FAIL = 1;
-
     /**
-     * @param self::MODE_* $mode Error handling mode
+     * @param ErrorMode::* $mode Error handling mode
      */
-    public function __construct(private Redis $conn, private int $mode = self::MODE_THROW)
+    public function __construct(private Redis $conn, private int $mode = ErrorMode::EXCEPTION)
     {
         try {
             $this->conn->ping();
@@ -40,8 +37,8 @@ class RedisPsr16 implements CacheInterface
             // Abusing match slightly here, so if a new mode is added in the
             // future, static analysis will find it.
             match ($this->mode) {
-                self::MODE_THROW => throw new Exception(Exception::ERROR_PING, $e),
-                self::MODE_FAIL => null,
+                ErrorMode::EXCEPTION => throw new Exception(Exception::ERROR_PING, $e),
+                ErrorMode::FAIL => null,
             };
         }
     }
@@ -85,8 +82,8 @@ class RedisPsr16 implements CacheInterface
             $raw = $this->conn->mGet($keys);
         } catch (RedisException $e) {
             return match ($this->mode) {
-                self::MODE_THROW => throw new Exception(Exception::ERROR_GONE, $e),
-                self::MODE_FAIL => array_fill_keys($keys, $default),
+                ErrorMode::EXCEPTION => throw new Exception(Exception::ERROR_GONE, $e),
+                ErrorMode::FAIL => array_fill_keys($keys, $default),
             };
         }
         $values = ($default === self::MISS_DEFAULT)
@@ -163,7 +160,7 @@ class RedisPsr16 implements CacheInterface
     }
 
     /**
-     * @param self::MODE_* $mode Error handling mode
+     * @param ErrorMode::* $mode Error handling mode
      */
     public function setMode(int $mode): void
     {
@@ -176,8 +173,8 @@ class RedisPsr16 implements CacheInterface
     private function handleException(RedisException $e): bool
     {
         return match ($this->mode) {
-            self::MODE_THROW => throw new Exception(Exception::ERROR_GONE, $e),
-            self::MODE_FAIL => false,
+            ErrorMode::EXCEPTION => throw new Exception(Exception::ERROR_GONE, $e),
+            ErrorMode::FAIL => false,
         };
     }
 }

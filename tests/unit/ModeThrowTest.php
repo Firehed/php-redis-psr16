@@ -39,7 +39,7 @@ class ModeThrowTest extends \PHPUnit\Framework\TestCase
             $this->redis->method($method)
                 ->willThrowException($ex);
         }
-        $this->cache = new RedisPsr16($this->redis, RedisPsr16::MODE_THROW);
+        $this->cache = new RedisPsr16($this->redis, ErrorMode::EXCEPTION);
     }
 
     public function testConstructThrows(): void
@@ -49,7 +49,7 @@ class ModeThrowTest extends \PHPUnit\Framework\TestCase
         $redis->method('ping')
             ->willThrowException(new RedisException());
         self::expectException(CacheException::class);
-        new RedisPsr16($redis, RedisPsr16::MODE_THROW);
+        new RedisPsr16($redis, ErrorMode::EXCEPTION);
     }
 
     public function testGetThrows(): void
