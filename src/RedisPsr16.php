@@ -111,7 +111,7 @@ class RedisPsr16 implements CacheInterface
 
         if ($ttl === null) {
             try {
-                return $this->conn->mset($values);
+                return $this->conn->mSet($values);
             } catch (RedisException $e) {
                 return $this->handleException($e);
             }
@@ -121,7 +121,7 @@ class RedisPsr16 implements CacheInterface
         $ok = true;
         foreach ($values as $key => $value) {
             try {
-                if (!$this->conn->setEx($key, $ttl, $value)) {
+                if (!$this->conn->setex($key, $ttl, $value)) {
                     $ok = false;
                 }
             } catch (RedisException $e) {
