@@ -112,6 +112,29 @@ class IntegrationTest extends \PHPUnit\Framework\TestCase
         self::assertSame($value, $response, 'Value changed when returned from cache');
     }
 
+    public function testSetMultipleWithTtl(): void
+    {
+        $obj = (object)['hi' => 'bye'];
+
+        $data = [
+            'str' => 'string',
+            'int' => 42,
+            'bool' => true,
+            'array' => ['string', -2, false],
+            'obj' => $obj,
+        ];
+
+        $cache = new RedisPsr16($this->redis);
+        $cache->setMultiple($data, 20);
+
+        self::assertSame('string', $cache->get('str'), 'str changed');
+        self::assertSame(42, $cache->get('int'), 'int changed');
+        self::assertSame(true, $cache->get('bool'), 'bool changed');
+        self::assertSame(['string', -2, false], $cache->get('array'), 'arrayi changed');
+
+        self::assertEquals($obj, $cache->get('obj'), 'obj changed');
+    }
+
     /**
      * @see https://www.php-fig.org/psr/psr-16/ Section 1.4
      *
