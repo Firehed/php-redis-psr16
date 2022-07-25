@@ -121,6 +121,9 @@ class RedisPsr16 implements CacheInterface
         $ok = true;
         foreach ($values as $key => $value) {
             try {
+                // Redis::setex() actually takes any serializable value, the detected
+                // signature is incorrect.
+                // @phpstan-ignore-next-line
                 if (!$this->conn->setex($key, $ttl, $value)) {
                     $ok = false;
                 }
