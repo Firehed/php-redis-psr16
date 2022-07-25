@@ -100,7 +100,7 @@ class RedisPsr16 implements CacheInterface
     }
 
     /**
-     * @param iterable<string> $values
+     * @param iterable<mixed> $values
      */
     public function setMultiple($values, $ttl = null): bool
     {
@@ -111,7 +111,7 @@ class RedisPsr16 implements CacheInterface
 
         if ($ttl === null) {
             try {
-                return $this->conn->mset($values);
+                return $this->conn->mSet($values);
             } catch (RedisException $e) {
                 return $this->handleException($e);
             }
@@ -121,7 +121,10 @@ class RedisPsr16 implements CacheInterface
         $ok = true;
         foreach ($values as $key => $value) {
             try {
-                if (!$this->conn->setEx($key, $ttl, $value)) {
+                // Redis::setex() actually takes any serializable value, the detected
+                // signature is incorrect.
+                // @phpstan-ignore-next-line
+                if (!$this->conn->setex($key, $ttl, $value)) {
                     $ok = false;
                 }
             } catch (RedisException $e) {
